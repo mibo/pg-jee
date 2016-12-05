@@ -1,0 +1,29 @@
+= Playground JEE
+
+== Disclaimer
+Current source code and version is published without license. +
+If you (somebody) want to use this in his project please contact me.
+Afterwards I will grant the use of this code without warranty.
+When I find some time to inform myself about the different possible licenses at link:http://choosealicense.com[choosealicense.com]
+I will probably change to a suitable license.
+
+== General information
+This `JEE Playground` project is just a playground for JEE samples.
+
+
+== Technical information
+  * The release versions are based on link:http://semver.org[Semantic Versioning 2.0.0].
+  * The latest release require `JavaEE 7` (or newer) and is build with link:https://maven.apache.org[Maven] (version `3.3.x`).
+
+
+== Current Features _(for latest stable version)_
+
+  * *none*
+
+== New and Noteworthy
+
+  * *nothing*
+
+== Roadmap
+
+  * *none*
