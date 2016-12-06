@@ -16,9 +16,14 @@ This `JEE Playground` project is just a playground for JEE samples.
   * The latest release require `JavaEE 7` (or newer) and is build with link:https://maven.apache.org[Maven] (version `3.3.x`).
 
 
-== Current Features _(for latest stable version)_
+== Current Features _(for this branch)_
 
-  * *none*
+  * Run `ActiveMQ` samples (see `de.mirb.pg.jee.ActiveMqSample`.
+    ** With embedded `ActiveMQ` broker (`vm://localhost`)
+    ** with `ActiveMQ` broker via Docker (`tcp://localhost:31616`)
+      *** `docker run -it --rm -p 38161:8161 -p 31616:61616 -P webcenter/activemq:latest`
+      *** Admin console: http://localhost:38161 with user/pwd: admin/admin
+
 
 == New and Noteworthy
 
