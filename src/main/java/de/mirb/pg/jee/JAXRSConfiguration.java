@@ -12,8 +12,8 @@ import java.util.Set;
 @ApplicationPath("/")
 public class JAXRSConfiguration extends Application {
 
-  @Override
-  public Set<Class<?>> getClasses() {
-    return Collections.singleton(ActiveMqJndi.class);
-  }
+//  @Override
+//  public Set<Class<?>> getClasses() {
+//    return Collections.singleton(ActiveMqJndi.class);
+//  }
 }
