@@ -24,10 +24,15 @@ This `JEE Playground` project is just a playground for JEE samples.
     ** with `ActiveMQ` broker via Docker (`tcp://localhost:31616`)
       *** `docker run -it --rm -p 38161:8161 -p 31616:61616 -P webcenter/activemq:latest`
       *** Admin console: http://localhost:38161 with user/pwd: admin/admin
+  * Run `ActiveMQ` client via `JNDI.properties` samples (see `de.mirb.pg.jee.ActiveMqJndi`).
+    ** with `ActiveMQ` broker via Docker (`tcp://localhost:31616`)
+      *** `docker run -it --rm -p 38161:8161 -p 31616:61616 -P webcenter/activemq:latest`
+      *** Admin console: http://localhost:38161 with user/pwd: admin/admin
   * Deploy WAR on Payara Server for `DefaultJmsService` sample
     .. Start Server
     .. To send sample content: Do GET request on http://localhost:8080/pg-jee/default/send?content=sampleContent
     .. To receive sample content: Do GET request on http://localhost:8080/pg-jee/default/receive
+  * Connect to ActiveMQ (from Payara) -> http://blog.payara.fish/connecting-to-activemq-with-payara-server
 
 == New and Noteworthy
 
@@ -36,3 +41,8 @@ This `JEE Playground` project is just a playground for JEE samples.
 == Roadmap
 
   * *none*
+
+== Interesting Links/Blogs/Tutorial related to this playground project
+
+  * link:https://docs.jboss.org/hornetq/2.2.5.Final/user-manual/en/html/using-jms.html[JBoss Documentation]
+  * link:http://activemq.apache.org/jndi-support.html[Active MQ JNDI Support]
