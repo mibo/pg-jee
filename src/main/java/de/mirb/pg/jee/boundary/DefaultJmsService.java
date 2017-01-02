@@ -23,7 +23,7 @@ public class DefaultJmsService {
   @GET
   @Path("send")
   public String sendMessage(@QueryParam("content") String content) {
-    if(sendToQueuer(content)) {
+    if(sendToQueue(content)) {
       return "success";
     }
     return "fail";
@@ -44,12 +44,9 @@ public class DefaultJmsService {
 
       Destination destination = session.createQueue(MY_QUEUE);
       MessageConsumer consumer = session.createConsumer(destination);
-//      consumer.setMessageListener((message) -> {
-//
-//      });
 
       Message message = consumer.receive(1000);
-      String text = null;
+      String text;
       if(message != null) {
         if (message instanceof TextMessage) {
           TextMessage textMessage = (TextMessage) message;
@@ -71,7 +68,7 @@ public class DefaultJmsService {
     }
   }
 
-  private boolean sendToQueuer(String message) {
+  private boolean sendToQueue(String message) {
     try {
       ConnectionFactory cf = grantConnectionFactory();
       Connection connection = cf.createConnection();
