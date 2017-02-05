@@ -15,7 +15,9 @@ public class ActiveMqSample {
   private static final String BROKER_URL = "tcp://localhost:31616";
   // Run sample with activemq as embedded broker
 //  private static final String BROKER_URL = "vm://localhost";
-  private static final int LOOPS = 5;
+  private static final int LOOPS = 1;
+  public static final String USER_NAME = "user";
+  public static final String PASSWORD = "password";
 
   public static void main(String[] args) throws Exception {
     if(LOOPS < 0) {
@@ -71,7 +73,7 @@ public class ActiveMqSample {
         ActiveMQConnectionFactory connectionFactory = new ActiveMQConnectionFactory(BROKER_URL);
 
         // Create a Connection
-        Connection connection = connectionFactory.createConnection();
+        Connection connection = connectionFactory.createConnection(USER_NAME, PASSWORD);
         connection.start();
 
         // Create a Session
@@ -111,7 +113,7 @@ public class ActiveMqSample {
         ActiveMQConnectionFactory connectionFactory = new ActiveMQConnectionFactory(BROKER_URL);
 
         // Create a Connection
-        Connection connection = connectionFactory.createConnection();
+        Connection connection = connectionFactory.createConnection(USER_NAME, PASSWORD);
         connection.start();
 
         connection.setExceptionListener(this);
