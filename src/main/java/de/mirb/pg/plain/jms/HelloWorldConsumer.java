@@ -15,11 +15,13 @@ public class HelloWorldConsumer implements Runnable, ExceptionListener {
 
   private final String brokerUrl;
   private final boolean useTopic;
+  private final String name;
   private ActiveMQConnectionFactory connectionFactory;
   private int daemonWait = 2000;
 
-  public HelloWorldConsumer(String brokerUrl, boolean useTopic) {
+  public HelloWorldConsumer(String brokerUrl, String name, boolean useTopic) {
     this.brokerUrl = brokerUrl;
+    this.name = name;
     // Create a ConnectionFactory
     connectionFactory = new ActiveMQConnectionFactory(brokerUrl);
     this.useTopic = useTopic;
@@ -104,26 +106,29 @@ public class HelloWorldConsumer implements Runnable, ExceptionListener {
         if (message instanceof TextMessage) {
           TextMessage textMessage = (TextMessage) message;
           String text = textMessage.getText();
-          System.out.println("Received message: " + text);
+          print("Received message: " + text);
         } else {
-          System.out.println("Received (none text msg): " + message);
+          print("Received (none text msg): " + message);
         }
         // Wait for next message
         message = consumer.receive(waitInMs);
       }
-      System.out.println("No more messages received after '" + daemonWait + "'ms");
+      print("No more messages received after '" + daemonWait + "'ms");
 
       consumer.close();
       session.close();
       connection.close();
     } catch (Exception e) {
-      System.out.println("Caught: " + e);
+      print("Caught: " + e);
       e.printStackTrace();
     }
   }
 
+  private void print(String message) {
+    System.out.println(name + ": " + message);
+  }
 
   public synchronized void onException(JMSException ex) {
-    System.out.println("JMS Exception occured.  Shutting down client.");
+    print("JMS Exception occured.  Shutting down client.");
   }
 }

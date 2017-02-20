@@ -14,46 +14,19 @@ public class ActiveMqTopicSample {
   private static final int LOOPS = 5;
 
   public static void main(String[] args) throws Exception {
-    boolean useTopic = false;
+    boolean useTopic = true;
     HelloWorldProducer producer = new HelloWorldProducer(BROKER_URL, useTopic);
 //    producer.run(10, 500);
 
-    HelloWorldConsumer consumer = new HelloWorldConsumer(BROKER_URL, useTopic);
+    HelloWorldConsumer consumer = new HelloWorldConsumer(BROKER_URL, "C1", useTopic);
 //    consumer.consumeAllAvailable(1000);
+    HelloWorldConsumer consumer2 = new HelloWorldConsumer(BROKER_URL, "C2", useTopic);
 
     thread(producer, false);
     thread(consumer, false);
+    thread(consumer2, false);
   }
 
-//  private static void runSample() throws InterruptedException {
-//    thread(new HelloWorldProducer(brokerUrl), false);
-//    thread(new HelloWorldProducer(brokerUrl), false);
-//    thread(new HelloWorldConsumer(brokerUrl), false);
-//    Thread.sleep(1000);
-//    thread(new HelloWorldConsumer(brokerUrl), false);
-//    thread(new HelloWorldProducer(brokerUrl), false);
-//    thread(new HelloWorldConsumer(brokerUrl), false);
-//    thread(new HelloWorldProducer(brokerUrl), false);
-//    Thread.sleep(1000);
-//    thread(new HelloWorldConsumer(brokerUrl), false);
-//    thread(new HelloWorldProducer(brokerUrl), false);
-//    thread(new HelloWorldConsumer(brokerUrl), false);
-//    thread(new HelloWorldConsumer(brokerUrl), false);
-//    thread(new HelloWorldProducer(brokerUrl), false);
-//    thread(new HelloWorldProducer(brokerUrl), false);
-//    Thread.sleep(1000);
-//    thread(new HelloWorldProducer(brokerUrl), false);
-//    thread(new HelloWorldConsumer(brokerUrl), false);
-//    thread(new HelloWorldConsumer(brokerUrl), false);
-//    thread(new HelloWorldProducer(brokerUrl), false);
-//    thread(new HelloWorldConsumer(brokerUrl), false);
-//    thread(new HelloWorldProducer(brokerUrl), false);
-//    thread(new HelloWorldConsumer(brokerUrl), false);
-//    thread(new HelloWorldProducer(brokerUrl), false);
-//    thread(new HelloWorldConsumer(brokerUrl), false);
-//    thread(new HelloWorldConsumer(brokerUrl), false);
-//    thread(new HelloWorldProducer(brokerUrl), false);
-//  }
 
   public static void thread(Runnable runnable, boolean daemon) {
     Thread brokerThread = new Thread(runnable);
