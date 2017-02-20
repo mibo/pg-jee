@@ -16,31 +16,33 @@ public class HelloWorldProducer implements Runnable {
 
   private final String brokerUrl;
   private final boolean useTopic;
+  private final String destinationName;
   private ActiveMQConnectionFactory connectionFactory;
   private int daemonDelay = 1000;
   private int deamonCount = 10;
 
-  public HelloWorldProducer(String brokerUrl, boolean useTopic) {
+  public HelloWorldProducer(String brokerUrl, boolean useTopic, String destinationName) {
     this.brokerUrl = brokerUrl;
     this.useTopic = useTopic;
+    this.destinationName = destinationName;
     // Create a ConnectionFactory
     connectionFactory = new ActiveMQConnectionFactory(brokerUrl);
   }
 
-  public int getDaemonDelay() {
+  public int getSendDelay() {
     return daemonDelay;
   }
 
-  public void setDaemonDelay(int daemonDelay) {
-    this.daemonDelay = daemonDelay;
+  public void setSendDelay(int sendDelay) {
+    this.daemonDelay = sendDelay;
   }
 
-  public int getDeamonCount() {
+  public int getSendCount() {
     return deamonCount;
   }
 
-  public void setDeamonCount(int deamonCount) {
-    this.deamonCount = deamonCount;
+  public void setSendCount(int sendCount) {
+    this.deamonCount = sendCount;
   }
 
   public void run(int count, int delayInMs) {
@@ -86,9 +88,19 @@ public class HelloWorldProducer implements Runnable {
   private Destination createDestination(Session session) throws JMSException {
     // Create the destination (Topic or Queue)
     if(useTopic) {
-      return session.createTopic("TEST.TOPIC");
+      return session.createTopic(grantDestinationName());
     }
-    return session.createQueue("TEST.FOO");
+    return session.createQueue(grantDestinationName());
+  }
+
+  private String grantDestinationName() {
+    if(destinationName == null) {
+      if(useTopic) {
+        return "TEST.TOPIC";
+      }
+      return "TEST.FOO";
+    }
+    return destinationName;
   }
 
   @Override

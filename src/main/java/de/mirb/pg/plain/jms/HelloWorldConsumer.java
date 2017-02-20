@@ -5,39 +5,49 @@ import org.apache.activemq.ActiveMQConnectionFactory;
 import javax.jms.Connection;
 import javax.jms.Destination;
 import javax.jms.ExceptionListener;
+import javax.jms.IllegalStateException;
 import javax.jms.JMSException;
 import javax.jms.Message;
 import javax.jms.MessageConsumer;
 import javax.jms.Session;
 import javax.jms.TextMessage;
+import javax.jms.Topic;
 
 public class HelloWorldConsumer implements Runnable, ExceptionListener {
 
   private final String brokerUrl;
   private final boolean useTopic;
   private final String name;
+  private final String destinationName;
   private ActiveMQConnectionFactory connectionFactory;
-  private int daemonWait = 2000;
+  private int receivedWait = 2000;
+  private boolean durable;
 
-  public HelloWorldConsumer(String brokerUrl, String name, boolean useTopic) {
+  public HelloWorldConsumer(String brokerUrl, String consumerName, boolean useTopic) {
+    this(brokerUrl, consumerName, null, useTopic, false);
+  }
+
+  public HelloWorldConsumer(String brokerUrl, String consumerName, String destinationName, boolean useTopic, boolean durable) {
     this.brokerUrl = brokerUrl;
-    this.name = name;
+    this.name = consumerName;
     // Create a ConnectionFactory
     connectionFactory = new ActiveMQConnectionFactory(brokerUrl);
     this.useTopic = useTopic;
+    this.durable = durable;
+    this.destinationName = destinationName;
   }
 
-  public int getDaemonWait() {
-    return daemonWait;
+  public int getReceivedWait() {
+    return receivedWait;
   }
 
-  public void setDaemonWait(int daemonWait) {
-    this.daemonWait = daemonWait;
+  public void setReceivedWait(int receivedWait) {
+    this.receivedWait = receivedWait;
   }
 
   @Override
   public void run() {
-    consumeAllAvailable(daemonWait);
+    consumeAllAvailable(receivedWait);
   }
 
   public void consumeLatestMessage() {
@@ -53,7 +63,7 @@ public class HelloWorldConsumer implements Runnable, ExceptionListener {
       Destination destination = createDestination(session);
 
       // Create a MessageConsumer from the Session to the Topic or Queue
-      MessageConsumer consumer = session.createConsumer(destination);
+      MessageConsumer consumer = createConsumer(session, destination);
 
       // Wait for a message
       Message message = consumer.receive(1000);
@@ -78,9 +88,9 @@ public class HelloWorldConsumer implements Runnable, ExceptionListener {
   private Destination createDestination(Session session) throws JMSException {
     // Create the destination (Topic or Queue)
     if(useTopic) {
-      return session.createTopic("TEST.TOPIC");
+      return session.createTopic(grantDestinationName());
     }
-    return session.createQueue("TEST.FOO");
+    return session.createQueue(grantDestinationName());
   }
 
 
@@ -88,18 +98,18 @@ public class HelloWorldConsumer implements Runnable, ExceptionListener {
     try {
       // Create a Connection
       Connection connection = connectionFactory.createConnection();
-      connection.start();
-
+      connection.setClientID(name);
       connection.setExceptionListener(this);
+
+      connection.start();
 
       // Create a Session
       Session session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
 
       // Create the destination (Topic or Queue)
       Destination destination = createDestination(session);
+      MessageConsumer consumer = createConsumer(session, destination);
 
-      // Create a MessageConsumer from the Session to the Topic or Queue
-      MessageConsumer consumer = session.createConsumer(destination);
       Thread.sleep(waitInMs);
       Message message = consumer.receive(waitInMs);
       while (message != null) {
@@ -113,7 +123,7 @@ public class HelloWorldConsumer implements Runnable, ExceptionListener {
         // Wait for next message
         message = consumer.receive(waitInMs);
       }
-      print("No more messages received after '" + daemonWait + "'ms");
+      print("No more messages received after '" + receivedWait + "'ms");
 
       consumer.close();
       session.close();
@@ -124,9 +134,34 @@ public class HelloWorldConsumer implements Runnable, ExceptionListener {
     }
   }
 
+  private MessageConsumer createConsumer(Session session, Destination destination) throws JMSException {
+    if(durable) {
+      if(destination instanceof Topic) {
+        // JMS 2.0
+//        return session.createDurableConsumer((Topic) destination, grantDestinationName());
+        // JMS 1.1
+        return session.createDurableSubscriber((Topic) destination, grantDestinationName());
+      }
+      throw new IllegalStateException("Destination is no Topic => not possible to create a durable consumer.");
+    }
+    // Create a MessageConsumer from the Session to the Topic or Queue
+    return session.createConsumer(destination);
+  }
+
   private void print(String message) {
     System.out.println(name + ": " + message);
   }
+
+  private String grantDestinationName() {
+    if(destinationName == null) {
+      if(useTopic) {
+        return "TEST.TOPIC";
+      }
+      return "TEST.FOO";
+    }
+    return destinationName;
+  }
+
 
   public synchronized void onException(JMSException ex) {
     print("JMS Exception occured.  Shutting down client.");
