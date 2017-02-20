@@ -1,6 +1,6 @@
 package de.mirb.pg.plain.jms;
 
-import org.apache.activemq.ActiveMQConnectionFactory;
+import org.apache.activemq.artemis.jms.client.ActiveMQConnectionFactory;
 
 import javax.jms.Connection;
 import javax.jms.DeliveryMode;
@@ -48,7 +48,7 @@ public class HelloWorldProducer implements Runnable {
   public void run(int count, int delayInMs) {
     try {
       // Create a Connection
-      Connection connection = connectionFactory.createConnection();
+      Connection connection = connectionFactory.createConnection("artemis", "simetraehcapa");
       connection.start();
 
       // Create a Session

@@ -6,9 +6,12 @@ package de.mirb.pg.plain.jms;
 public class ActiveMqTopicSample {
 
   // Run sample with activemq broker via docker container
-  // docker run -it --rm -p 38161:8161 -p 31616:61616 -P webcenter/activemq:latest
+  // docker run -it --rm -p 38161:8161 -p 31616:61616 webcenter/activemq:latest
   // Admin console: http://localhost:38161 with user/pwd: admin/admin
   private static final String BROKER_URL = "tcp://localhost:31616";
+
+  // docker ActiveMQ Artemis: `docker run -it --rm -p 38161:8161 -p 31616:61616 vromero/activemq-artemis`
+  // User/p: artemis / simetraehcapa
   // Run sample with activemq as embedded broker
 //  private static final String BROKER_URL = "vm://localhost";
   private static final int LOOPS = 5;
@@ -18,18 +21,18 @@ public class ActiveMqTopicSample {
 //    sampleQueues();
 
     // send to topic with two consumer -> message delivered to all consumer
-    sampleNoneDurableTopics();
+//    sampleNoneDurableTopics();
 
     // send to durable topic with two consumer -> message delivered to all consumer
 //    sampleDurableTopic();
 
     // first produce (true) and later consume with two consumer -> message delivered to all consumer
     // first call is necessary to create the durable topic after first ActiveMQ start
-//    sampleDurableTopicSplitProduceAndConsume(false);
-//    Thread.sleep(5000);
-//    sampleDurableTopicSplitProduceAndConsume(true);
-//    Thread.sleep(2000);
-//    sampleDurableTopicSplitProduceAndConsume(false);
+    sampleDurableTopicSplitProduceAndConsume(false);
+    Thread.sleep(5000);
+    sampleDurableTopicSplitProduceAndConsume(true);
+    Thread.sleep(2000);
+    sampleDurableTopicSplitProduceAndConsume(false);
   }
 
   public static void sampleQueues() throws Exception {

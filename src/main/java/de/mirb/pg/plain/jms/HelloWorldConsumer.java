@@ -1,6 +1,6 @@
 package de.mirb.pg.plain.jms;
 
-import org.apache.activemq.ActiveMQConnectionFactory;
+import org.apache.activemq.artemis.jms.client.ActiveMQConnectionFactory;
 
 import javax.jms.Connection;
 import javax.jms.Destination;
@@ -97,7 +97,7 @@ public class HelloWorldConsumer implements Runnable, ExceptionListener {
   public void consumeAllAvailable(int waitInMs) {
     try {
       // Create a Connection
-      Connection connection = connectionFactory.createConnection();
+      Connection connection = connectionFactory.createConnection("artemis", "simetraehcapa");
       connection.setClientID(name);
       connection.setExceptionListener(this);
 
@@ -138,9 +138,9 @@ public class HelloWorldConsumer implements Runnable, ExceptionListener {
     if(durable) {
       if(destination instanceof Topic) {
         // JMS 2.0
-//        return session.createDurableConsumer((Topic) destination, grantDestinationName());
+        return session.createDurableConsumer((Topic) destination, grantDestinationName());
         // JMS 1.1
-        return session.createDurableSubscriber((Topic) destination, grantDestinationName());
+//        return session.createDurableSubscriber((Topic) destination, grantDestinationName());
       }
       throw new IllegalStateException("Destination is no Topic => not possible to create a durable consumer.");
     }

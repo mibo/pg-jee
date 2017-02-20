@@ -1,6 +1,7 @@
 package de.mirb.pg.jee;
 
-import org.apache.activemq.command.ActiveMQTextMessage;
+
+import org.apache.activemq.artemis.jms.client.ActiveMQTextMessage;
 
 import javax.jms.*;
 import javax.naming.Context;
@@ -46,7 +47,7 @@ public class ActiveMqJndi {
   public boolean publishMessage(String message) {
     try {
       lookup();
-      ActiveMQTextMessage msg = new ActiveMQTextMessage();
+      TextMessage msg = connectionHolder.session.createTextMessage();
       msg.setText(message);
       connectionHolder.publisher.publish(msg);
       return true;
