@@ -9,17 +9,13 @@ import javax.jms.*;
  */
 public class ActiveMqSample {
 
-  // Run sample with activemq broker via docker container:
+  // Run sample with activemq broker via docker container
   // docker run -it --rm -p 38161:8161 -p 31616:61616 -P webcenter/activemq:latest
-  // or to test with JMS credentials run:
-  // docker run -it --rm -p 38161:8161 -p 31616:61616 -P mibo/activemq-sample:user
   // Admin console: http://localhost:38161 with user/pwd: admin/admin
   private static final String BROKER_URL = "tcp://localhost:31616";
   // Run sample with activemq as embedded broker
 //  private static final String BROKER_URL = "vm://localhost";
-  private static final int LOOPS = 1;
-  public static final String USER_NAME = "user";
-  public static final String PASSWORD = "password";
+  private static final int LOOPS = 5;
 
   public static void main(String[] args) throws Exception {
     if(LOOPS < 0) {
@@ -75,7 +71,7 @@ public class ActiveMqSample {
         ActiveMQConnectionFactory connectionFactory = new ActiveMQConnectionFactory(BROKER_URL);
 
         // Create a Connection
-        Connection connection = connectionFactory.createConnection(USER_NAME, PASSWORD);
+        Connection connection = connectionFactory.createConnection();
         connection.start();
 
         // Create a Session
@@ -115,7 +111,7 @@ public class ActiveMqSample {
         ActiveMQConnectionFactory connectionFactory = new ActiveMQConnectionFactory(BROKER_URL);
 
         // Create a Connection
-        Connection connection = connectionFactory.createConnection(USER_NAME, PASSWORD);
+        Connection connection = connectionFactory.createConnection();
         connection.start();
 
         connection.setExceptionListener(this);
